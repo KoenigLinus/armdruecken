@@ -22,3 +22,32 @@ Ich habe mich diese angenommen. Eine Gruppe von Menschen nichts mehr als die Opt
 
 ## Einleitung
 
+Das Projekt *Armdrücken!* besitzt einen künstlerischen Ursprung. Es kommt aus einer Welt in der es nicht, um Sinn oder Unsinn ging. Viel mehr aus einer in welcher die Lebensfreude und der Spaß an oberster Stelle steht.
+
+Das Spiel Armdrücken entstammt einer Spieltradition der sehr alten Berufsgruppe der Holzfäller. Sie mussten sich entsprechend ihrer Berufsgruppe Geselligkeiten zum Zeitvertreib ausdenken. Der Kampf Holzfäller\*in gegen Holzfäller\*in kam dort wie gelegen. Jedoch ohne die Gefahr eines echten Zweikampfes, alleine Fokussiert auf das Notwendige (Jenen Ansatz habe ich ebenso in meine Programmierung einfließen lassen).
+
+Mein Programm hintgegen bietet des passende kognitive Gegenstück zum rohen Austausch der eigenen Kräfte. Man könnte fast meinen für einen Ausgewogenen Lebensstil sei mein Programm notwendig.
+
+Die Nutzer sind klar interessiert am Ergebnis ihrer eigenen Leistungen, suchen sich jedoch auch Rivalen, welche sie selbst übertreffen wollen.
+
+## Technische Spekifikationen
+
+### ER-Modell
+
+Mein ER-Modell ist schnell erklärt. Es ist simpel, ist aber auch perfekt an meine Bedürfnisse Zugeschnitten.
+
+1. **Personen:** Sie beinhalten, neben der ID den Nickname der korrispondierenden Person.
+2. **Match:** Ein match ist ein Spiel bei dem es einen Zeitpunkt (TIMESTAMP, Datum und Uhrzeit) gibt sowie eine Dauer.
+
+Die Relationen sind ebenso simpel doch bis aufs kleine verfeinert und ausgetüftelt.
+
+1. **Sieger\*in:** Die Person, dessen Hand oben liegt.
+2. **Verlierer\*in:** Die Person, dessen Hand, von der Überlegenheit der Gegnerin, des Gegners herunter gedrückt wurde.
+
+## Verwendete Technologien
+
+Den grundsätzlichen Aufbau verdanke ich `HTML`. Das Aussehen `css`. Beides, wie mein drittes für die Logikzuständige Tool `JavaScript`, Standarts im Bereich der Webentwicklung. Ich habe mich aufgrund der Wurzeln meines Themas für bodenständige und bewehrte Technologien zurückgegriffen.
+
+Für die zunehmende Speizalisierungen im Bereich des Armdrückens griff ich jedoch auch auf speziellere Tool zurück. Für meine Datenbank verwendete ich `SQL`, für ihre Verwaltung `mySQL` mit welcher via `php` kommunizieren konnte. `phpmyadmin` half mir mit seiner `gui`. Diese Programme benutze ich alleine auf der Basis von `XAMPP` (*C*ross-Platform + *A*pache + *M*ySQL + *P*HP + *P*erl). Die `Fetch API` erlaubte es mir die mittels `PHP` erlangten Daten in meinen `JavaScript` code einzubinden.
+
+Moderner ist `ApexCharts.js`, welche mir die Möglichkeit eröffnete Grafiken ohne großen Aufwand zu erstellen.
