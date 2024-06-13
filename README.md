@@ -161,18 +161,19 @@ if ($result->num_rows > 0) {
 ```
 ##### Mit Umweg über die `fetch API`, `JavaScript` und `ApexCharts.js`
 
-Hier erkennen wir
+Im Code mit Kommentaren beschrieben:
 
 ``` HTML
-<h3>Gewinnrate</h3>
-<div id="win-percentage-chart"></div>
-<script src="fetch_win_percentage.js"></script>
+<h3>Gewinnrate</h3> 
+<div id="win-percentage-chart"></div> <!-- ApexChart wird hier abgelegt -->
+<script src="fetch_win_percentage.js"></script> <!-- Folgendes Skript wird ausgeführt -->
 ```
 
 ``` JS
-let winPercentageChart;
+//Definition unserer Graphik
+let winPercentageChart; 
 
-// Daten für das Diagramm abrufen und Diagramm/Tabelle aktualisieren
+// `fetch API`: Die `get_win_percentage.php` wird ausgeführt und in `JavaScript`-Variablen verpackt
 function fetchWinPercentageData() {
   fetch("get_win_percentage.php")
     .then((response) => response.json())
@@ -181,15 +182,21 @@ function fetchWinPercentageData() {
       const names = data.map((item) => item.Name);
       const winPercentages = data.map((item) => parseFloat(item.Gewinnrate));
 
+//Optionen der Grafik wird definiert
       const winPercentageOptions = {
 
 […]
 
+//Grafik wird definirt
 winPercentageChart = new ApexCharts(
-          document.querySelector("#win-percentage-chart"),
-          winPercentageOptions,
-        );
-        winPercentageChart.render();
+    //Mit Ablegeort `id="win-percentage-chart"`
+    document.querySelector("#win-percentage-chart"),
+    //Und den vorher definierten Optionen
+    winPercentageOptions,
+    );
+
+//Einmal rendern bitte!
+winPercentageChart.render();
 
 […]
 ```
