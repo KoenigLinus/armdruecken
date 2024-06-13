@@ -48,6 +48,6 @@ Die Relationen sind ebenso simpel doch bis aufs kleine verfeinert und ausgetüft
 
 Den grundsätzlichen Aufbau verdanke ich `HTML`. Das Aussehen `css`. Beides, wie mein drittes für die Logikzuständige Tool `JavaScript`, Standarts im Bereich der Webentwicklung. Ich habe mich aufgrund der Wurzeln meines Themas für bodenständige und bewehrte Technologien zurückgegriffen.
 
-Für die zunehmende Speizalisierungen im Bereich des Armdrückens griff ich jedoch auch auf speziellere Tool zurück. Für meine Datenbank verwendete ich `SQL`, für ihre Verwaltung `mySQL` mit welcher via `php` kommunizieren konnte. `phpmyadmin` half mir mit seiner `gui`. Diese Programme benutze ich alleine auf der Basis von `XAMPP` (*C*ross-Platform + *A*pache + *M*ySQL + *P*HP + *P*erl). Die `Fetch API` erlaubte es mir die mittels `PHP` erlangten Daten in meinen `JavaScript` code einzubinden.
+Für die zunehmende Speizalisierungen im Bereich des Armdrückens griff ich jedoch auch auf speziellere Tool zurück. Für meine Datenbank verwendete ich `SQL`, für ihre Verwaltung `mySQL` mit welcher via `php` kommunizieren konnte. `phpmyadmin` half mir mit seiner `gui`, welche ich durch `Apache` erreichen konnte, außerdem stellte es mir ein Preview zur Verfügung. Diese Programme benutze ich alleine auf der Basis von `XAMPP` (*C*ross-Platform + *A*pache + *M*ySQL + *P*HP + *P*erl). Die `Fetch API` erlaubte es mir die mittels `PHP` erlangten Daten in meinen `JavaScript` code einzubinden.
 
 Moderner ist `ApexCharts.js`, welche mir die Möglichkeit eröffnete Grafiken ohne großen Aufwand zu erstellen.
