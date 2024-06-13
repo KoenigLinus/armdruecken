@@ -56,3 +56,19 @@ Moderner ist `ApexCharts.js`, welche mir die Möglichkeit eröffnete Grafiken oh
 - `SQL`,
 - `XAMPP`: `mySQL`, `phpmyadmin`, `php`, `Apatche`
 - `ApexCharts.js`
+
+## Benutzerdokumentation
+
+Um den\*r Nutzer\*in, in seiner Einfalt, sofort von meinem Produkt zu überzeugen zeige ich ihm\*ihr die ersten Dinge die er nicht kennt mit Dingen die ihm\*ihr bewusst sind.
+
+1. Ich verdeutliche ihm\*ihr durch eine "Powergeladene Titelseite" (TM), dass mein Produkt die Spannung eines Armdrückduells inne hält.
+2. Als nächstes aber zeige ich dem\*r Nutzer\*in, dass mein Podukt einen Vorteil hat: Dokumentation!
+3. Wenn die legitimität meiner Daten akzeptiert wurde, zeige ich sofort, das was man wissen will. Wer hat gewonnen?
+
+Als Gewinnen stufe ich die höchste Gewinnrate ein. Dies gewährleistet, dass es nicht einfach oft genug versuchen kann, sondern immer mit dabei bleibt.
+
+4. Nachdem sich Favoriet\*innen gebildet haben lasse ich den\*r Nutzer\*in die Wahl die Suche zu spezifizieren. Man wählt selbst die Person aus und lässt dich von Daten überwältigen. Hier mit Fokus auf Zeit (blaue Linie), wobei der grüne Balken im Hintergrund die gesammten Siege seines Gegners, gegen welchen er gewonnen hat anzeigt.
+
+5. Als Nächstes gewähre ich einen Blick auf die Gesammtanzahl der Siege und die Durchschnittsdauer eines Duells.
+
+6. Zuletzt gebe ich den Usern die Möglichkeit selbst Datein einzugeben. Wenn die entsprechende Person nicht im System vorhanden ist, muss sie hinzugefügt werden
