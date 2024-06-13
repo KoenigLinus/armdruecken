@@ -98,7 +98,7 @@ Code wie Folgender taucht auf, da ich eine Libary namens `ApexCharts` verwende. 
 
 Der Aufbau des `html` lässt sich an meiner Hero-Page (Titelseite) gut exemplarisch Darstellen. Für jede Grobe Sektion habe ich ein `<sction>`-Element verwendet und als `class` die entsprechenden Themen, selbst wenn jene nicht gebraucht werden sind sie dennoch ein wichter Teil, um den Code für Programmierer übersichtlicher zu machen.
 
-```
+``` html
 <section class="hero">
     <div class="center">
         <h1>Armdrücken!</h1>
