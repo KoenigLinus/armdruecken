@@ -114,10 +114,123 @@ Der Aufbau des `html` lässt sich an meiner Hero-Page (Titelseite) gut exemplari
 
 Gleich zu Beginn meines Codes importiere ich Daten direkt über `php`. Keine geschmackvolle Art und Weise, jedoch tut sie ihren Job. Sie erlaubt es mir mein `SQL` in `html` `<table>`s zu verschachteln.
 
-```
+``` HTML
 <section class="matchesList">
     <?php include "liste.php"; ?>
 </section>
+```
+
+Hier erkennt man wie mit `echo` ein `html` export möglich gemacht wird:
+
+``` php
+if ($result->num_rows > 0) {
+    echo "<table border='1'>
+        <tr>
+            <th>Nummer</th>
+                <th>Sieger</th>
+                <th>Verlierer</th>
+                <th>Datum & Uhrzeit</th>
+                <th>Zeit in Sekunden</th>
+            </tr>";
+
+    // Ausgabe der Daten jeder Zeile
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>" .
+            $row["MatchID"] .
+            "</td>
+                <td>" .
+            $row["SiegerName"] .
+            "</td>
+                <td>" .
+            $row["VerliererName"] .
+            "</td>
+                <td>" .
+            $row["DatumUhrzeit"] .
+            "</td>
+                <td>" .
+            $row["ZeitInSekunden"] .
+            "</td>
+              </tr>";
+    }
+
+    echo "</table>";
+} else {
+    echo "0 Ergebnisse";
+}
+```
+##### Mit Umweg über die `fetch API`, `JavaScript` und `ApexCharts.js`
+
+Hier erkennen wir
+
+``` HTML
+<h3>Gewinnrate</h3>
+<div id="win-percentage-chart"></div>
+<script src="fetch_win_percentage.js"></script>
+```
+
+``` JS
+let winPercentageChart;
+
+// Daten für das Diagramm abrufen und Diagramm/Tabelle aktualisieren
+function fetchWinPercentageData() {
+  fetch("get_win_percentage.php")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Fetched data:", data); // Debugging
+      const names = data.map((item) => item.Name);
+      const winPercentages = data.map((item) => parseFloat(item.Gewinnrate));
+
+      const winPercentageOptions = {
+
+[…]
+
+winPercentageChart = new ApexCharts(
+          document.querySelector("#win-percentage-chart"),
+          winPercentageOptions,
+        );
+        winPercentageChart.render();
+
+[…]
+```
+
+``` php
+<?php
+[…]
+//login mit vorher definierten Logindaten
+$conn = new mysqli($servername, $username, $password, $dbname); 
+[…]
+
+//Variable `$sql` welche die `SQL`-Abfrage beinhaltet:
+$sql = "SELECT p.Name,
+               COUNT(m.SiegerID) AS Siege,
+               (COUNT(m.SiegerID) / (SELECT COUNT(*) FROM matches WHERE SiegerID = p.ID OR VerliererID = p.ID)) * 100 AS Gewinnrate
+        FROM personen p
+        LEFT JOIN matches m ON p.ID = m.SiegerID
+        GROUP BY p.ID
+        ORDER BY Gewinnrate DESC";
+
+//Abfrage der vordefinierten `SQL`-Afrage:
+$result = $conn->query($sql);
+
+//Verpackung des Output in den Array `$data`
+if ($result) {
+    if ($result->num_rows > 0) {
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        echo json_encode($data);
+    } else {
+        echo json_encode([]);
+    }
+} else {
+    echo json_encode(["error" => "Error in SQL query: " . $conn->error]);
+}
+
+//Schließung der Verbindung 
+$conn->close();
+?>
 ```
 
 
