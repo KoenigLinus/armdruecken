@@ -81,7 +81,7 @@ Als Gewinnen stufe ich die höchste Gewinnrate ein. Dies gewährleistet, dass es
 
 Ich verwende 2 verschiedene `css` Dateien, um eine Übersichtlichkeit zu wahren.
 
-```
+``` html
 <link rel="stylesheet" href="style.css" />
 <link rel="stylesheet" href="table.css" />
 ```
@@ -90,7 +90,7 @@ Ich verwende 2 verschiedene `css` Dateien, um eine Übersichtlichkeit zu wahren.
 
 Code wie Folgender taucht auf, da ich eine Libary namens `ApexCharts` verwende. Sie lässt mich Tabellen vergleichsweise einfach in `JavaScript` darzustellen. Der Code kommt, aber nicht aus dem nichts und so muss der nicht von mir verfasste Code andersweitig inportiert werden. Bei mir durch ein `<script>` Import einer Datei einer externen `URL`.
 
-```
+``` html
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 ```
 
@@ -243,7 +243,7 @@ $conn->close();
 
 Ebenfalls kommentierter Code
 
-```
+``` html
 //Ein `<form>`-Element, das macht es einem super leicht Daten über `php` zu exportieren
 <form action="set_data.php" method="post">
     //Ein `<input>`-Element, welches einem erlaubt leicht Datein einem `<form>` hinzuzufügen
@@ -254,7 +254,7 @@ Ebenfalls kommentierter Code
 </form>
 ```
 
-```
+``` php
 <?php
 […]
 // "Link… Verbinde dich…" Zelda (botw) 
