@@ -1,0 +1,33 @@
+/* Apply styles to all tables */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: none;
+    /* Remove outer border */
+}
+
+/* Table cells (headers and data cells) */
+table th,
+table td {
+    padding: 10px;
+    text-align: left;
+    background-color: #ffffff00;
+    /* White background for cells */
+    border: none;
+    /* Remove borders */
+    /*border-radius: 8px;*/
+    /* Rounded corners for cells */
+}
+
+/* Optional: Alternating row colors */
+table tbody tr:nth-child(even) {
+    background-color: #f2f2f200;
+    /* Light grey background for even rows */
+}
+
+/* Hover effect */
+table tbody tr:hover {
+    background-color: #fff;
+    /* Light blue background on hover */
+}
