@@ -36,8 +36,8 @@ Die Nutzer sind klar interessiert am Ergebnis ihrer eigenen Leistungen, suchen s
 
 Mein ER-Modell ist schnell erklärt. Es ist simpel, ist aber auch perfekt an meine Bedürfnisse Zugeschnitten.
 
-1. **Personen:** Sie beinhalten, neben der ID den Nickname der korrispondierenden Person.
-2. **Match:** Ein match ist ein Spiel bei dem es einen Zeitpunkt (TIMESTAMP, Datum und Uhrzeit) gibt sowie eine Dauer.
+1. **Personen:** Sie beinhalten, neben der `ID` den `Nickname` der korrispondierenden Person.
+2. **Match:** Ein match ist ein Spiel bei dem es einen `Zeitpunkt` (TIMESTAMP, Datum und Uhrzeit) gibt sowie eine `Dauer`.
 
 Die Relationen sind ebenso simpel doch bis aufs kleine verfeinert und ausgetüftelt.
 
