@@ -72,3 +72,53 @@ Als Gewinnen stufe ich die höchste Gewinnrate ein. Dies gewährleistet, dass es
 5. Als Nächstes gewähre ich einen Blick auf die Gesammtanzahl der Siege und die Durchschnittsdauer eines Duells.
 
 6. Zuletzt gebe ich den Usern die Möglichkeit selbst Datein einzugeben. Wenn die entsprechende Person nicht im System vorhanden ist, muss sie hinzugefügt werden
+
+## Entwicklerdokumentation
+
+### HTML
+
+#### Links zum `css`
+
+Ich verwende 2 verschiedene `css` Dateien, um eine Übersichtlichkeit zu wahren.
+
+```
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="table.css" />
+```
+
+#### ApexCharts
+
+Code wie Folgender taucht auf, da ich eine Libary namens `ApexCharts` verwende. Sie lässt mich Tabellen vergleichsweise einfach in `JavaScript` darzustellen. Der Code kommt, aber nicht aus dem nichts und so muss der nicht von mir verfasste Code andersweitig inportiert werden. Bei mir durch ein `<script>` Import einer Datei einer externen `URL`.
+
+```
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+```
+
+#### Aufbau
+
+Der Aufbau des `html` lässt sich an meiner Hero-Page (Titelseite) gut exemplarisch Darstellen. Für jede Grobe Sektion habe ich ein `<sction>`-Element verwendet und als `class` die entsprechenden Themen, selbst wenn jene nicht gebraucht werden sind sie dennoch ein wichter Teil, um den Code für Programmierer übersichtlicher zu machen.
+
+```
+<section class="hero">
+    <div class="center">
+        <h1>Armdrücken!</h1>
+    </div>
+    <div class="transition"></div>
+    <img src="images/arm-wrestling.jpg"></img>
+</section>
+```
+
+#### Import von Dateien
+
+##### Direkt über `php`
+
+Gleich zu Beginn meines Codes importiere ich Daten direkt über `php`. Keine geschmackvolle Art und Weise, jedoch tut sie ihren Job. Sie erlaubt es mir mein `SQL` in `html` `<table>`s zu verschachteln.
+
+```
+<section class="matchesList">
+    <?php include "liste.php"; ?>
+</section>
+```
+
+
+
