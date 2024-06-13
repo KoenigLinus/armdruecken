@@ -197,6 +197,7 @@ winPercentageChart = new ApexCharts(
 
 //Einmal rendern bitte!
 winPercentageChart.render();
+//Mikrowellen *ping!* einfügen
 
 […]
 ```
