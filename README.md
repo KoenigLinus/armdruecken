@@ -108,9 +108,7 @@ Der Aufbau des `html` lässt sich an meiner Hero-Page (Titelseite) gut exemplari
 </section>
 ```
 
-#### Import von Dateien
-
-##### Direkt über `php`
+#### Import von Dateien direkt über `php`
 
 Gleich zu Beginn meines Codes importiere ich Daten direkt über `php`. Keine geschmackvolle Art und Weise, jedoch tut sie ihren Job. Sie erlaubt es mir mein `SQL` in `html` `<table>`s zu verschachteln.
 
@@ -159,7 +157,7 @@ if ($result->num_rows > 0) {
     echo "0 Ergebnisse";
 }
 ```
-##### Mit Umweg über die `fetch API`, `JavaScript` und `ApexCharts.js`
+#### Import mit Umweg über die `fetch API`, `JavaScript` und `ApexCharts.js`
 
 Im Code mit Kommentaren beschrieben:
 
@@ -241,5 +239,96 @@ $conn->close();
 ?>
 ```
 
+#### Den Export über `php`
+
+Ebenfalls kommentierter Code
+
+```
+//Ein `<form>`-Element, das macht es einem super leicht Daten über `php` zu exportieren
+<form action="set_data.php" method="post">
+    //Ein `<input>`-Element, welches einem erlaubt leicht Datein einem `<form>` hinzuzufügen
+    <input type="text" id="name" name="name" placeholder="Name">
+        <br>
+        <br>
+    <input type="submit" value="Person hinzufügen">
+</form>
+```
+
+```
+<?php
+[…]
+// "Link… Verbinde dich…" Zelda (botw) 
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Überprüfen, ob die Verbindung erfolgreich war
+if ($conn->connect_error) {
+    die("Verbindung fehlgeschlagen: " . $conn->connect_error);
+}
+
+[…]
+
+// Jonny Kontroletty:
+if (
+    $_SERVER["REQUEST_METHOD"] == "POST" &&
+    isset($_POST["name"]) &&
+    isset($_POST["password"])
+) {
+    $name = sanitizeInput($_POST["name"]);
+    $password = sanitizeInput($_POST["password"]);
+
+    // "Und Gott schuf den Menschen zu seinem Bilde – und füge sie seiner `SQL`-Datenbank hinzu."
+    $sql = "INSERT INTO personen (Name, Passwort) VALUES ('$name', '$password')";
+
+    if ($conn->query($sql) === true) {
+        echo "Neue Person erfolgreich hinzugefügt.";
+    } else {
+        // RIP (ist aber auch schon einmal passiert, und das war sicher nicht das letzte mal…)
+        echo "Fehler beim Hinzufügen der Person: " . $conn->error;
+    }
+}
+
+// Überprüfen und Vorbereitung für das Hinzufügen eines neuen Matches
+if (
+    $_SERVER["REQUEST_METHOD"] == "POST" &&
+    isset($_POST["sieger"]) &&
+    isset($_POST["verlierer"]) &&
+    isset($_POST["datum"]) &&
+    isset($_POST["zeit"])
+) {
+    $siegerID = sanitizeInput($_POST["sieger"]);
+    $verliererID = sanitizeInput($_POST["verlierer"]);
+    $datumUhrzeit = sanitizeInput($_POST["datum"]);
+    $zeitInSekunden = sanitizeInput($_POST["zeit"]);
+
+    // Tinder: Ein neuer match?
+    $sql = "INSERT INTO matches (SiegerID, VerliererID, DatumUhrzeit, ZeitInSekunden) VALUES ('$siegerID', '$verliererID', '$datumUhrzeit', '$zeitInSekunden')";
+
+    if ($conn->query($sql) === true) {
+        echo "Neues Match erfolgreich hinzugefügt.";
+    } else {
+        // Tinder: Spaß!
+        echo "Fehler beim Hinzufügen des Matches: " . $conn->error;
+    }
+}
+
+// Es gibt Abschiede, die fallen besonders schwer. Abschiede für immer.
+$conn->close();
+?>
+
+```
+
+
+
+---
+
+## Epilog
+
+Vielen Dank, dass Sie meine Dokumentation laßten.
+
+Beenden wir es wie es begonnen hat, mit einem Zitat.
+
+> Lerne zuhören, und du wirst auch von denjenigen Nutzen ziehen, die dummes Zeug reden.
+> 
+> *– Platon*
 
 
