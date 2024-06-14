@@ -15,9 +15,9 @@
 > 
 > *– Lex Luther in „Superman“ 1978*
 
-Es ist wichtig aus der Geschichte zu lernen. Aber, wie? Man denkt einfach Dinge aus seinem Hinterkpf kramen zu können reiche aus, aber tut es das. Um diese Fragen zu für alle mal zu erschließen beschloss ich den Wettkampf aller Wettkämpfe die Schulhofbeschäftigung schlecht hin zu analysieren. Der eiserne Wettkampf um oben oder unten, um Sieg oder Verlust.
+Es ist wichtig aus der Geschichte zu lernen. Aber, wie? Man denkt einfach Dinge aus seinem Hinterkpf kramen zu können reiche aus, aber tut es das? Um diese Fragen zu für alle mal zu erschließen beschloss ich den Wettkampf aller Wettkämpfe die Schulhofbeschäftigung schlecht hin zu analysieren. Der eiserne Wettkampf um oben oder unten, um Sieg oder Verlust.
 
-Der ewige Kampft gegen die eigene soziale Annerkennung treibt Menschen in die Wissenschaft. Einen möglichst schnellen Übergang der Bizepskräfte in den der Trizepse. Das Verlangen nach Mehr brachte eine breite von neuen Techniken und Übungen in die Sozietät Schule.
+Der ewige Kampft für die Annerkennung der eigenen Sozietät treibt Menschen in die Wissenschaft. Einen möglichst schnellen Übergang der Bizepskräfte in den der Trizepse. Das Verlangen nach Mehr brachte eine breite von neuen Techniken und Übungen in die Sozietät Schule.
 
 Ich habe mich diese angenommen. Eine Gruppe von Menschen nichts mehr als die Optimierung im Sinn.
 
