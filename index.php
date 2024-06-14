@@ -17,43 +17,34 @@
         <div class="center">
             <h1>Armdrücken!</h1>
         </div>
-        <img src="images/arm-wrestling.jpg">
+        <div class="transition"></div>
+        <img src="images/arm-wrestling.jpg"></img>
     </section>
 
     <section class="matchesList">
         <?php include "liste.php"; ?>
     </section>
 
-    <!--
-    Ranking:
-        - Aus dem Reinem Gewinnen
-        - Aus der Geschwindigkeit   (mit leistungsnievauo)
-        - Entwicklung
-    -->
-
-    <section class="personList"></section>
-    <section class="add person">
-        <h2>Neue Person hinzufügen</h2>
-        <form action="insert_data.php" method="post">
-            <input type="text" id="name" name="name" placeholder="Name">
-            <br><br>
-            <input type="password" id="password" name="password" placeholder="Sicherheitscode">
-            <br><br>
-            <input type="submit" value="Person hinzufügen">
-        </form>
-    </section>
-
     <section class="specs">
         <h2>Statistiken</h2>
+        <h3>Gewinnrate</h3>
+        <div id="win-percentage-chart"></div>
+        <script src="fetch_win_percentage.js"></script>
+        <!--  -->
+        <h3>Verlauf</h3>
         <label for="person">Wähle eine Person:</label>
         <select id="person" onchange="fetchData()"></select>
-        <div id="chart"></div>
-        <script src="siege_data.js"></script>
+        <div id="verlauf_chart"></div>
+        <script src="fetch_zeiten_und_gegner_siege.js"></script>
+        <!--  -->
+        <h3>Siege und Zeiten</h3>
+        <div id="win-chart"></div>
+        <script src="fetch_persons_siege_und_zeiten.js"></script>
     </section>
 
-    <section class="add match">
+    <section class="add">
        <h2>Neues Match hinzufügen</h2>
-        <form action="insert_data.php" method="post">
+        <form action="set_data.php" method="post">
             <label for="sieger">Sieger:</label>
             <select id="sieger" name="sieger" required>
                <?php include "list_all_persons.php"; ?>
@@ -72,8 +63,15 @@
             <br><br>
             <input type="submit" value="Match hinzufügen">
         </form>
+       <h2>Neue Person hinzufügen</h2>
+       <form action="set_data.php" method="post">
+           <input type="text" id="name" name="name" placeholder="Name">
+           <br><br>
+               <!--<input type="password" id="password" name="password" placeholder="Sicherheitscode">
+               <br><br>-->
+           <input type="submit" value="Person hinzufügen">
+       </form>
    </section>
-
 
 </body>
 </html>
