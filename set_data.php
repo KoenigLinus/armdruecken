@@ -26,11 +26,12 @@ function sanitizeInput($input)
 // Überprüfen und Verarbeiten der Formulardaten für das Hinzufügen einer neuen Person
 if (
     $_SERVER["REQUEST_METHOD"] == "POST" &&
-    isset($_POST["name"]) &&
-    isset($_POST["password"])
+    isset($_POST["name"]) //&&
+    //isset($_POST["password"])
 ) {
+    echo "Variablen werden transveriert.";
     $name = sanitizeInput($_POST["name"]);
-    $password = sanitizeInput($_POST["password"]);
+    $password = "kein passwor"; //sanitizeInput($_POST["password"]);
 
     // SQL-Befehl für das Einfügen einer neuen Person
     $sql = "INSERT INTO personen (Name, Passwort) VALUES ('$name', '$password')";
@@ -40,6 +41,8 @@ if (
     } else {
         echo "Fehler beim Hinzufügen der Person: " . $conn->error;
     }
+} else {
+    echo "Kein name bzw. passwort";
 }
 
 // Überprüfen und Verarbeiten der Formulardaten für das Hinzufügen eines neuen Matches
