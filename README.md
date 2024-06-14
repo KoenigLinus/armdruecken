@@ -12,6 +12,7 @@
 ## Prolog
 
 > Manche Leute können ‚Krieg und Frieden‘ lesen und glauben, es sei eine schlichte Abenteuergeschichte. Andere lesen die Ingredentien auf einem Kaugummipapier und ihnen erschließt sich das Universum.“
+> 
 > *– Lex Luther in „Superman“ 1978*
 
 Es ist wichtig aus der Geschichte zu lernen. Aber, wie? Man denkt einfach Dinge aus seinem Hinterkpf kramen zu können reiche aus, aber tut es das. Um diese Fragen zu für alle mal zu erschließen beschloss ich den Wettkampf aller Wettkämpfe die Schulhofbeschäftigung schlecht hin zu analysieren. Der eiserne Wettkampf um oben oder unten, um Sieg oder Verlust.
