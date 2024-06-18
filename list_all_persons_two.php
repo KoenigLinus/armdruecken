@@ -1,4 +1,5 @@
 <?php
+
 // Verbindung zur Datenbank herstellen (erneut für die zweite Dropdown-Liste)
 $conn = new mysqli($servername, $username, $password, $dbname);
 
