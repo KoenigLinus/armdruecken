@@ -1,0 +1,1130 @@
+# armdrueckenCREATE TABLE personen (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(255) NOT NULL,
+    Passwort VARCHAR(255) NOT NULL
+);
+
+-- Beispiel-Daten in die Tabelle personen einfügen
+INSERT INTO personen (Name, Passwort) VALUES
+('Linus', '1234'),
+('Bogdan', '5678');
+
+-- Tabelle für Matches erstellen
+CREATE TABLE matches (
+    MatchID INT PRIMARY KEY AUTO_INCREMENT,
+    SiegerID INT,
+    VerliererID INT,
+    DatumUhrzeit DATETIME,
+    ZeitInSekunden INT,
+    FOREIGN KEY (SiegerID) REFERENCES personen(ID),
+    FOREIGN KEY (VerliererID) REFERENCES personen(ID)
+);
+
+-- Beispiel-Daten in die Tabelle matches einfügen
+INSERT INTO matches (SiegerID, VerliererID, DatumUhrzeit, ZeitInSekunden) VALUES
+(1, 2, '2024-06-13 10:00:00', 120),
+(2, 1, '2024-06-13 11:00:00', 150);
+let win_chart;
+
+function fetchWinData() {
+  fetch("get_persons_siege_und_zeiten.php")
+    .then((response) => response.json())
+    .then((data) => {
+      // Daten für das Diagramm vorbereiten
+      const names = data.map((item) => item.Name);
+      const siege = data.map((item) => item.Siege);
+      const durchschnittlicheSiegZeit = data.map(
+        (item) => item.DurchschnittlicheSiegZeit,
+      );
+
+      const win_options = {
+        series: [
+          {
+            name: "Anzahl der Siege",
+            type: "bar",
+            data: siege,
+          },
+          {
+            name: "Durchschnittliche Siegzeit (Sekunden)",
+            type: "bar",
+            data: durchschnittlicheSiegZeit,
+          },
+        ],
+        chart: {
+          height: 350,
+          type: "bar",
+          stacked: false,
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: "55%",
+            endingShape: "rounded",
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          width: [4, 4],
+          curve: "smooth",
+        },
+        xaxis: {
+          categories: names,
+        },
+        color: ["#FFA500", "#0000FF"], // hier fraben machen pls
+        yaxis: [
+          {
+            title: {
+              text: "Anzahl der Siege",
+            },
+            min: 0,
+          },
+          {
+            opposite: true,
+            title: {
+              text: "Durchschnittliche Siegzeit (Sekunden)",
+            },
+            min: 0,
+          },
+        ],
+        tooltip: {
+          shared: true,
+          intersect: false,
+          y: {
+            formatter: function (val, { seriesIndex }) {
+              if (seriesIndex === 0) {
+                return val + " Siege";
+              } else {
+                return val.toFixed(2) + " Sekunden";
+              }
+            },
+          },
+        },
+      };
+
+      if (win_chart) {
+        win_chart.updateOptions(win_options);
+      } else {
+        win_chart = new ApexCharts(
+          document.querySelector("#win-chart"),
+          win_options,
+        );
+        win_chart.render();
+      }
+    })
+    .catch((error) => console.error("Error fetching data:", error));
+}
+
+// Standarddaten laden
+document.addEventListener("DOMContentLoaded", () => {
+  fetchVerlaufData();
+  fetchWinData();
+});
+let verlauf_chart;
+
+// Personen aus der Datenbank laden und Dropdown-Menü füllen
+fetch("get_persons.php")
+  .then((response) => response.json())
+  .then((persons) => {
+    const select = document.getElementById("person");
+    persons.forEach((person) => {
+      const option = document.createElement("option");
+      option.value = person.ID;
+      option.textContent = person.Name;
+      select.appendChild(option);
+    });
+
+    // Daten für die erste Person abrufen und Diagramm/Tabelle aktualisieren
+    if (persons.length > 0) {
+      select.value = persons[0].ID;
+      fetchDataVerlauf();
+      console.log("fetch data wurde ausgerufen");
+    }
+  });
+
+// Daten für die ausgewählte Person abrufen und Diagramm/Tabelle aktualisieren
+function fetchDataVerlauf() {
+  const person_id = document.getElementById("person").value;
+  fetch(`get_siege_data.php?person_id=${person_id}`)
+    .then((response) => response.json())
+    .then((data) => {
+      // Daten für das Diagramm vorbereiten
+      const dates = data.map((item) => item.date);
+      const sieg_zeiten = data.map((item) => item.sieg_zeit);
+      const gegner_sieg_anzahl = data.map((item) => item.gegner_sieg_anzahl);
+
+      const verlauf_options = {
+        series: [
+          {
+            name: "Sieg Zeit (in Sekunden)",
+            type: "line",
+            data: sieg_zeiten,
+          },
+          {
+            name: "Anzahl der Siege der Gegner",
+            type: "column",
+            data: gegner_sieg_anzahl,
+          },
+        ],
+        chart: {
+          height: 350,
+          type: "line",
+          stacked: false,
+          id: "mainChart",
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          width: [4, 4],
+          curve: "smooth",
+        },
+        xaxis: {
+          type: "datetime",
+          categories: dates,
+        },
+        tooltip: {
+          shared: true,
+          intersect: false,
+          x: {
+            format: "dd/MM/yy HH:mm",
+          },
+        },
+        yaxis: [
+          {
+            title: {
+              text: "Sieg Zeit (in Sekunden)",
+            },
+            min: 0,
+          },
+          {
+            opposite: true,
+            title: {
+              text: "Anzahl der Siege der Gegner",
+            },
+            min: 0,
+          },
+        ],
+        colors: ["#0390fc", "#fcba03"],
+      };
+
+      if (verlauf_chart) {
+        verlauf_chart.updateOptions(verlauf_options);
+      } else {
+        verlauf_chart = new ApexCharts(
+          document.querySelector("#verlauf_chart"),
+          verlauf_options,
+        );
+        verlauf_chart.render();
+      }
+    })
+    .catch((error) => console.error("Error fetching data:", error));
+}
+let winPercentageChart;
+
+// Daten für das Diagramm abrufen und Diagramm/Tabelle aktualisieren
+function fetchWinPercentageData() {
+  fetch("get_win_percentage.php")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Fetched data:", data); // Debugging
+      const names = data.map((item) => item.Name);
+      const winPercentages = data.map((item) => parseFloat(item.Gewinnrate));
+
+      const winPercentageOptions = {
+        series: [
+          {
+            name: "Gewinnrate",
+            data: winPercentages,
+          },
+        ],
+        chart: {
+          type: "bar",
+          height: 350,
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        xaxis: {
+          title: {
+            text: "Gewinnrate (%)",
+          },
+          categories: names,
+        },
+        yaxis: {
+          title: {
+            text: "Personen",
+          },
+        },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return val.toFixed(2) + "%";
+            },
+          },
+        },
+      };
+
+      if (winPercentageChart) {
+        winPercentageChart.updateOptions(winPercentageOptions);
+      } else {
+        winPercentageChart = new ApexCharts(
+          document.querySelector("#win-percentage-chart"),
+          winPercentageOptions,
+        );
+        winPercentageChart.render();
+      }
+    })
+    .catch((error) => console.error("Error fetching data:", error));
+}
+
+// Initiale Daten laden
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("Document loaded. Fetching data...");
+  fetchWinPercentageData();
+});
+let verlauf_chart;
+
+// Personen aus der Datenbank laden und Dropdown-Menü füllen
+fetch("get_persons.php")
+  .then((response) => response.json())
+  .then((persons) => {
+    const select = document.getElementById("person");
+    persons.forEach((person) => {
+      const option = document.createElement("option");
+      option.value = person.ID;
+      option.textContent = person.Name;
+      select.appendChild(option);
+    });
+
+    // Daten für die erste Person abrufen und Diagramm/Tabelle aktualisieren
+    if (persons.length > 0) {
+      select.value = persons[0].ID;
+      fetchVerlaufData();
+      console.log("fetchVerlaufData wurde ausgerufen");
+    }
+  });
+
+// Daten für die ausgewählte Person abrufen und Diagramm/Tabelle aktualisieren
+function fetchVerlaufData() {
+  const person_id = document.getElementById("person").value;
+  fetch(`get_siege_data.php?person_id=${person_id}`)
+    .then((response) => response.json())
+    .then((data) => {
+      // Daten für das Diagramm vorbereiten
+      const dates = data.map((item) => item.date);
+      const sieg_zeiten = data.map((item) => item.sieg_zeit);
+      const gegner_sieg_anzahl = data.map((item) => item.gegner_sieg_anzahl);
+
+      const verlauf_options = {
+        series: [
+          {
+            name: "Sieg Zeit (in Sekunden)",
+            type: "line",
+            data: sieg_zeiten,
+          },
+          {
+            name: "Anzahl der Siege der Gegner",
+            type: "column",
+            data: gegner_sieg_anzahl,
+          },
+        ],
+        chart: {
+          height: 350,
+          type: "line",
+          stacked: false,
+          id: "mainChart",
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          width: [4, 4],
+          curve: "smooth",
+        },
+        xaxis: {
+          type: "datetime",
+          categories: dates,
+        },
+        tooltip: {
+          shared: true,
+          intersect: false,
+          x: {
+            format: "dd/MM/yy HH:mm",
+          },
+        },
+        yaxis: [
+          {
+            title: {
+              text: "Sieg Zeit (in Sekunden)",
+            },
+            min: 0,
+          },
+          {
+            opposite: true,
+            title: {
+              text: "Anzahl der Siege der Gegner",
+            },
+            min: 0,
+          },
+        ],
+      };
+
+      if (verlauf_chart) {
+        verlauf_chart.updateOptions(verlauf_options);
+      } else {
+        verlauf_chart = new ApexCharts(
+          document.querySelector("#verlauf_chart"),
+          verlauf_options,
+        );
+        verlauf_chart.render();
+      }
+    })
+    .catch((error) => console.error("Error fetching data:", error));
+}
+<?php
+ini_set("display_errors", 1);
+ini_set("display_startup_errors", 1);
+error_reporting(E_ALL);
+
+header("Content-Type: application/json");
+
+$servername = "localhost"; // dein Datenbank-Server
+$username = "root"; // dein Datenbank-Benutzername
+$password = ""; // dein Datenbank-Passwort
+$dbname = "armdruecken"; // dein Datenbank-Name
+
+// Verbindung zur Datenbank herstellen
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Überprüfen, ob die Verbindung hergestellt wurde
+if ($conn->connect_error) {
+    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
+}
+
+// SQL-Abfrage, um Personen und ihre Anzahl an Siegen zu erhalten
+$sql = "SELECT personen.ID, personen.Name, COUNT(matches.SiegerID) as Siege
+        FROM personen
+        LEFT JOIN matches ON personen.ID = matches.SiegerID
+        GROUP BY personen.ID, personen.Name
+        ORDER BY Siege DESC";
+
+$result = $conn->query($sql);
+
+if ($result) {
+    if ($result->num_rows > 0) {
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        echo json_encode($data);
+    } else {
+        echo json_encode([]);
+    }
+} else {
+    echo json_encode(["error" => "Error in SQL query: " . $conn->error]);
+}
+
+// Verbindung schließen
+$conn->close();
+?>
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "armdruecken";
+
+// Verbindung zur Datenbank herstellen
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Überprüfen, ob die Verbindung erfolgreich war
+if ($conn->connect_error) {
+    die("Verbindung fehlgeschlagen: " . $conn->connect_error);
+}
+
+// SQL-Abfrage zur Auswahl aller Personen
+$sql = "SELECT ID, Name FROM personen";
+$result = $conn->query($sql);
+
+$persons = [];
+if ($result->num_rows > 0) {
+    // Daten in ein Array konvertieren
+    while ($row = $result->fetch_assoc()) {
+        $persons[] = $row;
+    }
+}
+
+// JSON-Ausgabe
+header("Content-Type: application/json");
+echo json_encode($persons);
+
+$conn->close();
+?>
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "armdruecken";
+
+// Verbindung zur Datenbank herstellen
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Überprüfen, ob die Verbindung erfolgreich war
+if ($conn->connect_error) {
+    die("Verbindung fehlgeschlagen: " . $conn->connect_error);
+}
+
+// SQL-Abfrage zur Ermittlung der Anzahl der Siege und der durchschnittlichen Siegzeit für jede Person
+$sql = "
+    SELECT
+        p.Name,
+        COUNT(m.MatchID) AS Siege,
+        AVG(m.ZeitInSekunden) AS DurchschnittlicheSiegZeit
+    FROM
+        personen p
+    LEFT JOIN
+        matches m ON p.ID = m.SiegerID
+    GROUP BY
+        p.Name
+";
+$result = $conn->query($sql);
+
+$data = [];
+if ($result->num_rows > 0) {
+    // Daten in ein Array konvertieren
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+}
+
+// JSON-Ausgabe
+header("Content-Type: application/json");
+echo json_encode($data);
+
+$conn->close();
+?>
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "armdruecken";
+$person_id = $_GET["person_id"]; // Die ausgewählte Person
+
+// Verbindung zur Datenbank herstellen
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Überprüfen, ob die Verbindung erfolgreich war
+if ($conn->connect_error) {
+    die("Verbindung fehlgeschlagen: " . $conn->connect_error);
+}
+
+// SQL-Abfrage zur Auswahl der Siege der Person und der Gegner
+$sql = "
+    SELECT
+        m.DatumUhrzeit as date,
+        m.ZeitInSekunden as sieg_zeit,
+        COUNT(m2.MatchID) as gegner_sieg_anzahl
+    FROM
+        matches m
+    LEFT JOIN
+        matches m2 ON m2.SiegerID = m.VerliererID
+    WHERE
+        m.SiegerID = ?
+    GROUP BY
+        m.DatumUhrzeit
+";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $person_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$data = [];
+if ($result->num_rows > 0) {
+    // Daten in ein Array konvertieren
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+}
+
+// JSON-Ausgabe
+header("Content-Type: application/json");
+echo json_encode($data);
+
+$stmt->close();
+$conn->close();
+?>
+<?php
+header("Content-Type: application/json");
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "armdruecken";
+
+// Verbindung zur Datenbank herstellen
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Überprüfen, ob die Verbindung hergestellt wurde
+if ($conn->connect_error) {
+    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
+}
+
+// SQL-Abfrage, um die Gewinnrate für jede Person zu berechnen und zu sortieren
+$sql = "SELECT p.Name,
+               COUNT(m.SiegerID) AS Siege,
+               (COUNT(m.SiegerID) / (SELECT COUNT(*) FROM matches WHERE SiegerID = p.ID OR VerliererID = p.ID)) * 100 AS Gewinnrate
+        FROM personen p
+        LEFT JOIN matches m ON p.ID = m.SiegerID
+        GROUP BY p.ID
+        ORDER BY Gewinnrate DESC";
+
+$result = $conn->query($sql);
+
+if ($result) {
+    if ($result->num_rows > 0) {
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        echo json_encode($data);
+    } else {
+        echo json_encode([]);
+    }
+} else {
+    echo json_encode(["error" => "Error in SQL query: " . $conn->error]);
+}
+
+// Verbindung schließen
+$conn->close();
+?>
+<!-- sudo /Applications/XAMPP/xamppfiles/bin/mysql.server start -->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="table.css" />
+    <title>armdrücken</title>
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <section class="hero">
+        <div class="center">
+            <h1>Armdrücken!</h1>
+        </div>
+        <div class="transition"></div>
+        <img src="images/arm-wrestling.jpg"></img>
+    </section>
+
+    <section class="matchesList">
+        <?php include "liste.php"; ?>
+    </section>
+
+    <section class="specs">
+        <h2>Statistiken</h2>
+        <h3>Gewinnrate</h3>
+        <div id="win-percentage-chart"></div>
+        <script src="fetch_win_percentage.js"></script>
+        <!--  -->
+        <h3>Verlauf</h3>
+        <label for="person">Wähle eine Person:</label>
+        <select id="person" onchange="fetchData()"></select>
+        <div id="verlauf_chart"></div>
+        <script src="fetch_zeiten_und_gegner_siege.js"></script>
+        <!--  -->
+        <h3>Siege und Zeiten</h3>
+        <div id="win-chart"></div>
+        <script src="fetch_persons_siege_und_zeiten.js"></script>
+    </section>
+
+    <section class="add">
+       <h2>Neues Match hinzufügen</h2>
+        <form action="set_data.php" method="post">
+            <label for="sieger">Sieger:</label>
+            <select id="sieger" name="sieger" required>
+               <?php include "list_all_persons.php"; ?>
+            </select>
+            <br><br>
+            <label for="verlierer">Verlierer:</label>
+            <select id="verlierer" name="verlierer" required>
+                <?php include "list_all_persons_two.php"; ?>
+            </select>
+            <br><br>
+            <label for="datum">Datum & Uhrzeit:</label>
+            <input type="datetime-local" id="datum" name="datum" required>
+            <br><br>
+            <label for="zeit">Zeit in Sekunden:</label>
+            <input type="number" id="zeit" name="zeit" required>
+            <br><br>
+            <input type="submit" value="Match hinzufügen">
+        </form>
+       <h2>Neue Person hinzufügen</h2>
+       <form action="set_data.php" method="post">
+           <input type="text" id="name" name="name" placeholder="Name">
+           <br><br>
+               <!--<input type="password" id="password" name="password" placeholder="Sicherheitscode">
+               <br><br>-->
+           <input type="submit" value="Person hinzufügen">
+       </form>
+   </section>
+
+</body>
+</html>
+<?php
+// Datenbankverbindungsdetails
+$servername = "localhost";
+$username = "root"; // Standardbenutzername für MySQL bei lokalen Servern
+$password = ""; // Standardpasswort für MySQL bei lokalen Servern
+$dbname = "armdruecken"; // Ersetze durch den Namen deiner Datenbank
+
+// Verbindung zur Datenbank herstellen
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Überprüfen, ob die Verbindung erfolgreich war
+if ($conn->connect_error) {
+    die("Verbindung fehlgeschlagen: " . $conn->connect_error);
+}
+
+// Funktion, um Eingaben sicher zu verarbeiten
+function sanitizeInput($input)
+{
+    global $conn;
+    return mysqli_real_escape_string(
+        $conn,
+        htmlspecialchars(strip_tags($input))
+    );
+}
+
+// Überprüfen und Verarbeiten der Formulardaten für das Hinzufügen einer neuen Person
+if (
+    $_SERVER["REQUEST_METHOD"] == "POST" &&
+    isset($_POST["name"]) &&
+    isset($_POST["password"])
+) {
+    $name = sanitizeInput($_POST["name"]);
+    $password = sanitizeInput($_POST["password"]);
+
+    // SQL-Befehl für das Einfügen einer neuen Person
+    $sql = "INSERT INTO personen (Name, Passwort) VALUES ('$name', '$password')";
+
+    if ($conn->query($sql) === true) {
+        echo "Neue Person erfolgreich hinzugefügt.";
+    } else {
+        echo "Fehler beim Hinzufügen der Person: " . $conn->error;
+    }
+}
+
+// Überprüfen und Verarbeiten der Formulardaten für das Hinzufügen eines neuen Matches
+if (
+    $_SERVER["REQUEST_METHOD"] == "POST" &&
+    isset($_POST["sieger"]) &&
+    isset($_POST["verlierer"]) &&
+    isset($_POST["datum"]) &&
+    isset($_POST["zeit"])
+) {
+    $siegerID = sanitizeInput($_POST["sieger"]);
+    $verliererID = sanitizeInput($_POST["verlierer"]);
+    $datumUhrzeit = sanitizeInput($_POST["datum"]);
+    $zeitInSekunden = sanitizeInput($_POST["zeit"]);
+
+    // SQL-Befehl für das Einfügen eines neuen Matches
+    $sql = "INSERT INTO matches (SiegerID, VerliererID, DatumUhrzeit, ZeitInSekunden) VALUES ('$siegerID', '$verliererID', '$datumUhrzeit', '$zeitInSekunden')";
+
+    if ($conn->query($sql) === true) {
+        echo "Neues Match erfolgreich hinzugefügt.";
+    } else {
+        echo "Fehler beim Hinzufügen des Matches: " . $conn->error;
+    }
+}
+
+// Verbindung zur Datenbank schließen
+$conn->close();
+?>
+<?php
+// Verbindung zur Datenbank herstellen
+$servername = "localhost";
+$username = "root"; // Standardbenutzername für MySQL bei lokalen Servern
+$password = ""; // Standardpasswort für MySQL bei lokalen Servern
+$dbname = "armdruecken"; // Ersetze durch den Namen deiner Datenbank
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Überprüfen, ob die Verbindung erfolgreich war
+if ($conn->connect_error) {
+    die("Verbindung fehlgeschlagen: " . $conn->connect_error);
+}
+
+// SQL-Abfrage, um alle Personen abzurufen
+$sql = "SELECT ID, Name FROM personen";
+$result = $conn->query($sql);
+
+// Optionen für die Dropdown-Liste erstellen
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        echo "<option value='" . $row["ID"] . "'>" . $row["Name"] . "</option>";
+    }
+}
+
+// Verbindung zur Datenbank schließen
+$conn->close();
+?>
+<?php
+// Verbindung zur Datenbank herstellen (erneut für die zweite Dropdown-Liste)
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Überprüfen, ob die Verbindung erfolgreich war
+if ($conn->connect_error) {
+    die("Verbindung fehlgeschlagen: " . $conn->connect_error);
+}
+
+// Erneute SQL-Abfrage, um alle Personen abzurufen
+$result = $conn->query($sql);
+
+// Optionen für die zweite Dropdown-Liste erstellen
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        echo "<option value='" . $row["ID"] . "'>" . $row["Name"] . "</option>";
+    }
+}
+
+// Verbindung zur Datenbank schließen
+$conn->close();
+?>
+<?php
+// Datenbankverbindungsdetails
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "armdruecken"; // Ersetze durch den Namen deiner Datenbank
+
+// Verbindung zur Datenbank herstellen
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Überprüfen, ob die Verbindung erfolgreich war
+if ($conn->connect_error) {
+    die("Verbindung fehlgeschlagen: " . $conn->connect_error);
+}
+
+// SQL-Abfrage, um die Match-Daten zusammen mit den Namen der Sieger und Verlierer abzurufen
+$sql = "SELECT
+            m.MatchID,
+            p1.Name AS SiegerName,
+            p2.Name AS VerliererName,
+            m.DatumUhrzeit,
+            m.ZeitInSekunden
+        FROM matches m
+        INNER JOIN personen p1 ON m.SiegerID = p1.ID
+        INNER JOIN personen p2 ON m.VerliererID = p2.ID";
+
+$result = $conn->query($sql);
+
+// Überprüfen, ob die Abfrage Ergebnisse liefert
+if ($result->num_rows > 0) {
+    echo "<table border='1'>
+            <tr>
+                <th>Nummer</th>
+                <th>Sieger</th>
+                <th>Verlierer</th>
+                <th>Datum & Uhrzeit</th>
+                <th>Zeit in Sekunden</th>
+            </tr>";
+
+    // Ausgabe der Daten jeder Zeile
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>" .
+            $row["MatchID"] .
+            "</td>
+                <td>" .
+            $row["SiegerName"] .
+            "</td>
+                <td>" .
+            $row["VerliererName"] .
+            "</td>
+                <td>" .
+            $row["DatumUhrzeit"] .
+            "</td>
+                <td>" .
+            $row["ZeitInSekunden"] .
+            "</td>
+              </tr>";
+    }
+
+    echo "</table>";
+} else {
+    echo "0 Ergebnisse";
+}
+
+// Verbindung zur Datenbank schließen
+$conn->close();
+<?php
+// Datenbankverbindungsdetails
+$servername = "localhost";
+$username = "root"; // Standardbenutzername für MySQL bei lokalen Servern
+$password = ""; // Standardpasswort für MySQL bei lokalen Servern
+$dbname = "armdruecken"; // Ersetze durch den Namen deiner Datenbank
+
+// Verbindung zur Datenbank herstellen
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Überprüfen, ob die Verbindung erfolgreich war
+if ($conn->connect_error) {
+    die("Verbindung fehlgeschlagen: " . $conn->connect_error);
+}
+
+// Funktion, um Eingaben sicher zu verarbeiten
+function sanitizeInput($input)
+{
+    global $conn;
+    return mysqli_real_escape_string(
+        $conn,
+        htmlspecialchars(strip_tags($input))
+    );
+}
+
+// Überprüfen und Verarbeiten der Formulardaten für das Hinzufügen einer neuen Person
+if (
+    $_SERVER["REQUEST_METHOD"] == "POST" &&
+    isset($_POST["name"]) //&&
+    //isset($_POST["password"])
+) {
+    echo "Variablen werden transveriert.";
+    $name = sanitizeInput($_POST["name"]);
+    $password = "kein passwor"; //sanitizeInput($_POST["password"]);
+
+    // SQL-Befehl für das Einfügen einer neuen Person
+    $sql = "INSERT INTO personen (Name, Passwort) VALUES ('$name', '$password')";
+
+    if ($conn->query($sql) === true) {
+        echo "Neue Person erfolgreich hinzugefügt.";
+    } else {
+        echo "Fehler beim Hinzufügen der Person: " . $conn->error;
+    }
+} else {
+    echo "Kein name bzw. passwort";
+}
+
+// Überprüfen und Verarbeiten der Formulardaten für das Hinzufügen eines neuen Matches
+if (
+    $_SERVER["REQUEST_METHOD"] == "POST" &&
+    isset($_POST["sieger"]) &&
+    isset($_POST["verlierer"]) &&
+    isset($_POST["datum"]) &&
+    isset($_POST["zeit"])
+) {
+    $siegerID = sanitizeInput($_POST["sieger"]);
+    $verliererID = sanitizeInput($_POST["verlierer"]);
+    $datumUhrzeit = sanitizeInput($_POST["datum"]);
+    $zeitInSekunden = sanitizeInput($_POST["zeit"]);
+
+    // SQL-Befehl für das Einfügen eines neuen Matches
+    $sql = "INSERT INTO matches (SiegerID, VerliererID, DatumUhrzeit, ZeitInSekunden) VALUES ('$siegerID', '$verliererID', '$datumUhrzeit', '$zeitInSekunden')";
+
+    if ($conn->query($sql) === true) {
+        echo "Neues Match erfolgreich hinzugefügt.";
+    } else {
+        echo "Fehler beim Hinzufügen des Matches: " . $conn->error;
+    }
+}
+
+// Verbindung zur Datenbank schließen
+$conn->close();
+?>
+let chart;
+
+// Personen aus der Datenbank laden und Dropdown-Menü füllen
+fetch("get_persons.php")
+  .then((response) => response.json())
+  .then((persons) => {
+    const select = document.getElementById("person");
+    persons.forEach((person) => {
+      const option = document.createElement("option");
+      option.value = person.ID;
+      option.textContent = person.Name;
+      select.appendChild(option);
+    });
+
+    // Daten für die erste Person abrufen und Diagramm/Tabelle aktualisieren
+    if (persons.length > 0) {
+      select.value = persons[0].ID;
+      fetchData();
+      console.log("fetch data wurde ausgerufen");
+    }
+  });
+
+// Daten für die ausgewählte Person abrufen und Diagramm/Tabelle aktualisieren
+function fetchData() {
+  const person_id = document.getElementById("person").value;
+  fetch(`get_siege_data.php?person_id=${person_id}`)
+    .then((response) => response.json())
+    .then((data) => {
+      // Daten für das Diagramm vorbereiten
+      const dates = data.map((item) => item.date);
+      const sieg_zeiten = data.map((item) => item.sieg_zeit);
+      const gegner_sieg_anzahl = data.map((item) => item.gegner_sieg_anzahl);
+
+      const options = {
+        series: [
+          {
+            name: "Sieg Zeit (in Sekunden)",
+            type: "line",
+            data: sieg_zeiten,
+          },
+          {
+            name: "Anzahl der Siege der Gegner",
+            type: "column",
+            data: gegner_sieg_anzahl,
+          },
+        ],
+        chart: {
+          height: 350,
+          type: "line",
+          stacked: false,
+          id: "mainChart",
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          width: [4, 4],
+          curve: "smooth",
+        },
+        xaxis: {
+          type: "datetime",
+          categories: dates,
+        },
+        tooltip: {
+          shared: true,
+          intersect: false,
+          x: {
+            format: "dd/MM/yy HH:mm",
+          },
+        },
+        yaxis: [
+          {
+            title: {
+              text: "Sieg Zeit (in Sekunden)",
+            },
+            min: 0,
+          },
+          {
+            opposite: true,
+            title: {
+              text: "Anzahl der Siege der Gegner",
+            },
+            min: 0,
+          },
+        ],
+      };
+
+      if (chart) {
+        chart.updateOptions(options);
+      } else {
+        chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+      }
+    })
+    .catch((error) => console.error("Error fetching data:", error));
+}
+* {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, Helvetica, sans-serif;
+    text-decoration: none;
+}
+body {
+    background: lightblue;
+}
+section {
+    margin: 10vh;
+}
+.hero {
+    margin: 0;
+    height: 40vh;
+    overflow: hidden;
+    padding-bottom: 20vh;
+}
+.hero img {
+    z-index: -1;
+    width: 100vw;
+}
+h1 {
+    font-size: 10vh;
+    color: white;
+    z-index: 2;
+}
+h2 {
+    margin-top: 5vh;
+}
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hero .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 40vh;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.hero .transition {
+    width: 100vw;
+    height: 60vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: rgb(2, 0, 36);
+    background: linear-gradient(
+        0deg,
+        rgba(2, 0, 36, 1) 0%,
+        rgba(0, 212, 255, 0) 100%
+    );
+    opacity: 0.5;
+}
+/* Apply styles to all tables */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: none;
+    /* Remove outer border */
+}
+
+/* Table cells (headers and data cells) */
+table th,
+table td {
+    padding: 10px;
+    text-align: left;
+    background-color: #ffffff00;
+    /* White background for cells */
+    border: none;
+    /* Remove borders */
+    /*border-radius: 8px;*/
+    /* Rounded corners for cells */
+}
+
+/* Optional: Alternating row colors */
+table tbody tr:nth-child(even) {
+    background-color: #f2f2f200;
+    /* Light grey background for even rows */
+}
+
+/* Hover effect */
+table tbody tr:hover {
+    background-color: #fff;
+    /* Light blue background on hover */
+}

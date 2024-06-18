@@ -1,4 +1,5 @@
 <?php
+
 // Verbindung zur Datenbank herstellen
 $servername = "localhost";
 $username = "root"; // Standardbenutzername für MySQL bei lokalen Servern

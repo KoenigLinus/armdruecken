@@ -1,4 +1,4 @@
-<!-- sudo /Applications/XAMPP/xamppfiles/bin/mysql.server start -->
+<!-- moin sudo /Applications/XAMPP/xamppfiles/bin/mysql.server start -->
 <!doctype html>
 <html lang="en">
 
@@ -33,7 +33,7 @@
         <!--  -->
         <h3>Verlauf</h3>
         <label for="person">Wähle eine Person:</label>
-        <select id="person" onchange="fetchVerlaufData()"></select>
+        <select id="person" onchange="fetchData()"></select>
         <div id="verlauf_chart"></div>
         <script src="fetch_zeiten_und_gegner_siege.js"></script>
         <!--  -->
@@ -71,15 +71,6 @@
                <br><br>-->
            <input type="submit" value="Person hinzufuegen">
        </form>
-   </section>
-
-   <section class="impressum">
-   <h2>Impressum</h2>
-    <p>Angaben gemäß § 5 TMG</p>
-    <p>Linus Behrens in Funktion als Schüler der Georg-Christoph-Lichtenberg-Schule Kassel</p>
-    <p>Brückenhofstr. 88</p>
-    <p>34132 Kassel</p>
-    <p>E-Mail: l.behrens@schueler.lg-ks.de</p>
    </section>
 
 </body>
