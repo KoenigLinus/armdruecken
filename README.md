@@ -292,26 +292,28 @@ if (
     }
 }
 
-// Überprüfen und Vorbereitung für das Hinzufügen eines neuen Matches
+// Überprüfen ob es sich um ein Hinzufügen eines neuen Matches handelt:
 if (
-    $_SERVER["REQUEST_METHOD"] == "POST" &&
-    isset($_POST["sieger"]) &&
-    isset($_POST["verlierer"]) &&
-    isset($_POST["datum"]) &&
-    isset($_POST["zeit"])
+    $_SERVER["REQUEST_METHOD"] == "POST" &&            //gibt es überhaupt einen "POST" und
+    isset($_POST["sieger"]) &&                         //gibt es einen notwendigen "sieger" und
+    isset($_POST["verlierer"]) &&                      //gibt es einen notwendigen "verlierer" und
+    isset($_POST["datum"]) &&                          //gibt es ein notwendiges "datum" und
+    isset($_POST["zeit"])                              //gibt es eine notwendige "zeit"?
 ) {
-    $siegerID = sanitizeInput($_POST["sieger"]);
-    $verliererID = sanitizeInput($_POST["verlierer"]);
-    $datumUhrzeit = sanitizeInput($_POST["datum"]);
-    $zeitInSekunden = sanitizeInput($_POST["zeit"]);
+//trägt die superglobalen arrays in variablen um
+    $siegerID = sanitizeInput($_POST["sieger"]);       //Wert des Felds mit dem Namen "sieger" abrufen
+    $verliererID = sanitizeInput($_POST["verlierer"]); //Wert des Felds mit dem Namen "verlierer" abrufen
+    $datumUhrzeit = sanitizeInput($_POST["datum"]);    //Wert des Felds mit dem Namen "datum" abrufen
+    $zeitInSekunden = sanitizeInput($_POST["zeit"]);   //Wert des Felds mit dem Namen "zeit" abrufen
 
-    // Tinder: Ein neuer match?
+    // Tinder: Ein neuer match! (hier noch in der Warteschlange)
     $sql = "INSERT INTO matches (SiegerID, VerliererID, DatumUhrzeit, ZeitInSekunden) VALUES ('$siegerID', '$verliererID', '$datumUhrzeit', '$zeitInSekunden')";
 
     if ($conn->query($sql) === true) {
+        // Tinder: wann würden wir dich je anlügen?
         echo "Neues Match erfolgreich hinzugefügt.";
     } else {
-        // Tinder: Spaß!
+        // Tinder: Spaß! hahaha
         echo "Fehler beim Hinzufügen des Matches: " . $conn->error;
     }
 }
