@@ -60,6 +60,8 @@ Moderner ist `ApexCharts.js`, welche mir die Möglichkeit eröffnete Grafiken oh
 - `XAMPP`: `mySQL`, `phpmyadmin`, `php`, `Apatche`
 - `ApexCharts.js`
 
+![Tools](https://github.com/KoenigLinus/armdruecken/assets/93053722/513f6d12-fa14-4b15-9b8c-4354c8ae0265)
+
 ## Benutzerdokumentation
 
 Um den\*r Nutzer\*in, in seiner Einfalt, sofort von meinem Produkt zu überzeugen zeige ich ihm\*ihr die ersten Dinge die er nicht kennt mit Dingen die ihm\*ihr bewusst sind.
