@@ -208,23 +208,22 @@ winPercentageChart.render();
 ``` php
 <?php
 […]
-//login mit vorher definierten Logindaten
+//login vorbereiten mit vordefinierten Logindaten
 $conn = new mysqli($servername, $username, $password, $dbname); 
 […]
 
 //Variable `$sql` welche die `SQL`-Abfrage beinhaltet:
-$sql = "SELECT p.Name,
-               COUNT(m.SiegerID) AS Siege,
-               (COUNT(m.SiegerID) / (SELECT COUNT(*) FROM matches WHERE SiegerID = p.ID OR VerliererID = p.ID)) * 100 AS Gewinnrate
-        FROM personen p
-        LEFT JOIN matches m ON p.ID = m.SiegerID
-        GROUP BY p.ID
-        ORDER BY Gewinnrate DESC";
+$sql = "SELECT p.Name,                              // "Ich will die Namen der Personen!" *– Jeder Cop einer guten Cop-Geschichte*
+               COUNT(m.SiegerID) AS Siege,          // Wieviele Siege
+               (COUNT(m.SiegerID) / (SELECT COUNT(*) FROM matches WHERE SiegerID = p.ID OR VerliererID = p.ID)) * 100 AS Gewinnrate // "Quick math" *– Tim*; "Mathe-Abi 5 Punkte" *– Ich*; aber nur wo die person auch richtig war
+        FROM personen p                             // `Personen` als `p` abgekürtzt
+        LEFT JOIN matches m ON p.ID = m.SiegerID    // Kleiner leftJOIN hat noch niemandem geschadet
+        GROUP BY p.ID                               //
+        ORDER BY Gewinnrate DESC;";                 // Ordnung ist das halbe Leben
 
-//Abfrage der vordefinierten `SQL`-Afrage:
-$result = $conn->query($sql);
+$result = $conn->query($sql);                       // This is where the magic happends
 
-//Verpackung des Output in den Array `$data`
+//Entpackung des Output in den Array `$data`
 if ($result) {
     if ($result->num_rows > 0) {
         $data = [];
