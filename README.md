@@ -45,7 +45,7 @@ Die Relationen sind ebenso simpel doch bis aufs kleine verfeinert und ausgetüft
 1. **Sieger\*in:** Die Person, dessen Hand oben liegt.
 2. **Verlierer\*in:** Die Person, dessen Hand, von der Überlegenheit der Gegnerin, des Gegners herunter gedrückt wurde.
 
-![ER-Modell](https://github.com/KoenigLinus/armdruecken/assets/ER-Modell.jpg)
+![ER-Modell](https://github.com/KoenigLinus/armdruecken/assets/ER-Modell.jpeg)
 
 ## Verwendete Technologien
 
