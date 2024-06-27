@@ -15,7 +15,6 @@ if ($conn->connect_error) {
 
 // SQL-Abfrage, um die Gewinnrate für jede Person zu berechnen und zu sortieren
 $sql = "SELECT p.Name,
-        COUNT(m.SiegerID) AS Siege,
         (COUNT(m.SiegerID) / (SELECT COUNT(*) FROM matches WHERE SiegerID = p.ID OR VerliererID = p.ID)) * 100 AS Gewinnrate
         FROM personen p
         LEFT JOIN matches m ON p.ID = m.SiegerID
